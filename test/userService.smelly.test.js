@@ -74,7 +74,24 @@ describe('UserService - Suíte de Testes com Smells', () => {
     }
   });
 
-  test.skip('deve retornar uma lista vazia quando não há usuários', () => {
-    // TODO: Implementar este teste depois.
+  test('deve retornar uma lista vazia quando não há usuários', () => {
+    const relatorio = userService.generateUserReport();
+    expect(relatorio).toBe('--- Relatório de Usuários ---\nNenhum usuário cadastrado.');
+  });
+
+  test('deve falhar ao criar usuário sem dados obrigatórios', () => {
+    expect(() => userService.createUser()).toThrow('Nome, email e idade são obrigatórios.');
+    expect(() => userService.createUser('Nome')).toThrow('Nome, email e idade são obrigatórios.');
+    expect(() => userService.createUser('Nome', 'email')).toThrow('Nome, email e idade são obrigatórios.');
+  });
+
+  test('deve retornar null ao buscar usuário inexistente', () => {
+    const usuarioInexistente = userService.getUserById('id-inexistente');
+    expect(usuarioInexistente).toBeNull();
+  });
+
+  test('deve retornar false ao tentar desativar usuário inexistente', () => {
+    const resultado = userService.deactivateUser('id-inexistente');
+    expect(resultado).toBe(false);
   });
 });
